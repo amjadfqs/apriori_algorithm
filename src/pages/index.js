@@ -1,118 +1,179 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import { useState } from "react";
+import TransactionForm from "./components/transactionForm";
+import { apriori, countItemsets, filterByMinSup, findFrequentOneItemsets } from '../algo/apriori';
 
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [result, setResult] = useState();
+  // 
+  const [minSup, setMinSup] = useState(0);
+  const [minConf, setMinConf] = useState(0);
+  const [results, setResults] = useState([]);
+  const [steps, setSteps] = useState([]);
+  // for display:
+  const [allCounts, setAllcounts] = useState(null);
+  const [beforePruningCk, setBeforePruningCk] = useState(null);
+  const [afterPruningCk, setAfterPruningCk] = useState(null);
+  const [allRules, setAllRules] = useState(null);
+  const [filteredRules, setFilteredRules] = useState(null);
+
+
+
+  const handleMinSupChange = (e) => setMinSup(e.target.value);
+
+  const handleMinConfChange = (event) => {
+    setMinConf(event.target.value);
+  };
+
+  const runApriori = () => {
+    const parsedDataset = result;
+    const minSupInt = parseInt(minSup, 10);
+    const [aprioriResults, Counts, beforePruningCk, afterPruningCk, ARules, FRules] = apriori(parsedDataset, minSupInt, minConf);
+    //
+    setAllcounts(Counts);
+    setBeforePruningCk(beforePruningCk);
+    setAfterPruningCk(afterPruningCk);
+    setResults(aprioriResults);
+    setAllRules(ARules);
+    console.log('allRules', ARules);
+    setFilteredRules(FRules);
+    console.log('filteredRules', FRules);
+    // Display steps
+    let candidates = findFrequentOneItemsets(parsedDataset, minSupInt);
+    let stepResults = [];
+    while (Object.keys(candidates).length > 0) {
+      const frequentItemsets = filterByMinSup(candidates, minSupInt);
+      stepResults.push({ candidates, frequentItemsets });
+      candidates = countItemsets(Object.keys(frequentItemsets), parsedDataset);
+    }
+    setSteps(stepResults);
+  };
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="p-8 bg-white">
+      <div className="flex">
+        <div className="w-9/12">
+          <TransactionForm setResult={setResult} />
+        </div>
+        <div className="w-2/5 h-80">
+          <h2 className="mb-4 text-xl font-bold">Transaction :</h2>
+          {result && (
+            <div className="mt-8 h-full overflow-scroll">
+              {result.map((arr, index) => (
+                <div key={index}>{JSON.stringify(arr, null, 4)}</div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className="flex gap-16">
+        <div className="flex gap-4">
+          <label className="flex items-center mb-4">
+            <span className="mr-2">Minimum Support : </span>
+            <input
+              type="number"
+              value={minSup}
+              min={0}
+              max={100}
+              onChange={handleMinSupChange}
+              className="w-20 input input-bordered input-sm outline-none"
+            />
+          </label>
+          <label className="flex items-center mb-4">
+            <span className="mr-2">Minimum Confidence : </span>
+            <input
+              type="number"
+              value={minConf}
+              min={0}
+              max={100}
+              onChange={handleMinConfChange}
+              className="w-20 input input-bordered input-sm outline-none"
+            />
+          </label>
+        </div>
+        <button onClick={runApriori} className="mb-4 btn btn-accent">
+          Run Apriori
+        </button>
       </div>
+      <h2 className="mb-2 text-xl font-semibold">Results</h2>
+      <ul className="mb-4 list-disc list-inside">
+        {results.map((result, index) => (
+          <li key={index}>{result.join(' - ')}</li>
+        ))}
+      </ul>
+      <h2 className="mb-2 text-xl font-semibold">Steps</h2>
+      <div className="flex gap-4">
+        {['allCounts', 'results', 'beforePruningCk', 'afterPruningCk'].map((dataKey, dataIndex) => (
+          <div key={dataIndex} className="flex flex-col w-3/12 gap-10">
+            {[allCounts, results, beforePruningCk, afterPruningCk][dataIndex]?.map((levelCounts, levelIndex) => {
+              // Check if the levelCounts object is empty
+              // const isLevelCountsEmpty = Object.keys(levelCounts).length === 0;
+              const isLevelCountsEmpty = dataKey !== 'afterPruningCk' && Object.keys(levelCounts).length === 0;
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+              return (
+                !isLevelCountsEmpty && (
+                  <div key={levelIndex} className="flex flex-col">
+                    <h4 className="mb-1 font-semibold">
+                      {dataKey === 'allCounts' && `Counts - Level ${levelIndex + 1}`}
+                      {dataKey === 'beforePruningCk' && `After Joining - Level ${levelIndex + 1}`}
+                      {dataKey === 'afterPruningCk' && `After Pruning - Level ${levelIndex + 1}`}
+                      {dataKey === 'results' && `After Min Support - Level ${levelIndex + 1}`}
+                    </h4>
+                    <div className="overflow-y-scroll min-h-table h-80">
+                      <table className="table w-full table-compact flex-1 ">
+                        <thead>
+                          <tr>
+                            {dataKey === 'allCounts' && <th>Itemset</th>}
+                            {dataKey === 'allCounts' ? <th>Count</th> : <th>Itemset</th>}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(levelCounts).map(([key, value], index) => (
+                            <tr key={index}>
+                              {dataKey === 'allCounts' && <td>{key.toString()}</td>}
+                              {dataKey != 'allCounts' ? <td>{index + 1} - {value}</td> : <td> {value}</td>}
+                              {/* <td>{value}</td> */}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )
+              );
+            })}
+          </div>
+        ))}
       </div>
-    </main>
-  )
+      <h2 className="my-5 text-xl font-semibold">Rules : </h2>
+      <table className="table w-full table-zebra">
+        <thead>
+          <tr>
+            <th>Antecedent</th>
+            <th>Consequent</th>
+            <th>Confidence Value</th>
+            <th>Valid</th>
+          </tr>
+        </thead>
+        <tbody>
+          {allRules?.map((item, index) => (
+            <tr key={index}>
+              <td>{item.antecedent.join(', ')}</td>
+              <td>{item.consequent.join(', ')}</td>
+              <td>{(item.confidence * 100).toFixed(1)} %</td>
+              <td>
+                {item.confidence > (minConf / 100) ? (
+                  <span className="text-green-500 text-3xl">✓</span>
+                ) : (
+                  <span className="text-red-500 text-3xl">×</span>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
+

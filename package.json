@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
+    "tauri": "tauri",
     "lint": "next lint"
   },
   "dependencies": {
@@ -16,6 +18,11 @@
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "tailwindcss": "3.3.2"
+    "tailwindcss": "3.3.2",
+    "daisyui": "^2.51.5",
+    "papaparse": "^5.4.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.2.3"
   }
 }
