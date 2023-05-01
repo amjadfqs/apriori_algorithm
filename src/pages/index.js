@@ -67,6 +67,8 @@ export default function Home() {
         </div>
       </div>
 
+      <div className="divider"></div>
+
       <div className="flex gap-16">
         <div className="flex gap-4">
           <label className="flex items-center mb-4">

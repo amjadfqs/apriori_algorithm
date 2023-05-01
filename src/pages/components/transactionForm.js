@@ -85,7 +85,6 @@ export default function TransactionForm({ setResult }) {
       </form>
       <div className="divider w-48">OR</div>
       <ImportCvs setResult={setResult} />
-      <div className="divider"></div>
     </div>
   );
 }
