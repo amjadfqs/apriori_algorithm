@@ -49,9 +49,8 @@ export function findFrequentOneItemsets(D, minSup) {
     return { firstItemSet, counts };
 }
 
-function aprioriGen(Lk_1) {
-    const newItemsetsBeforePruning = [];
-    const newItemsetsAfterPruning = [];
+function aprioriJoin(Lk_1) {
+    const newItemsets = [];
     const len = Lk_1.length;
 
     for (let i = 0; i < len; i++) {
@@ -59,32 +58,42 @@ function aprioriGen(Lk_1) {
             const itemset1 = Lk_1[i].split(',');
             const itemset2 = Lk_1[j].split(',');
 
-            // Check that all but the last elements of two itemsets are equal
             if (itemset1.slice(0, -1).join(',') === itemset2.slice(0, -1).join(',')) {
-                // Combine the last elements of two itemsets if they are not the same
                 if (itemset1.slice(-1) !== itemset2.slice(-1)) {
                     const newItemset = [...itemset1, itemset2.slice(-1)].sort();
-
-                    // Collect new itemsets before pruning
-                    newItemsetsBeforePruning.push(newItemset.join(','));
-
-                    // Prune step: Check if all (k-1)-item subsets are in Lk_1
-                    const subsets = getSubsets(newItemset, newItemset.length - 1);
-                    const allSubsetsFrequent = subsets.every(subset =>
-                        Lk_1.includes(subset.join(','))
-                    );
-
-                    if (allSubsetsFrequent) {
-                        newItemsetsAfterPruning.push(newItemset.join(','));
-
-                    }
+                    newItemsets.push(newItemset.join(','));
                 }
             }
         }
     }
 
+    return newItemsets;
+}
+
+function aprioriPrune(newItemsetsBeforePruning, Lk_1) {
+    const newItemsetsAfterPruning = [];
+
+    for (const newItemset of newItemsetsBeforePruning) {
+        const newItemsetArray = newItemset.split(',');
+        const subsets = getSubsets(newItemsetArray, newItemsetArray.length - 1);
+        const allSubsetsFrequent = subsets.every(subset =>
+            Lk_1.includes(subset.join(','))
+        );
+
+        if (allSubsetsFrequent) {
+            newItemsetsAfterPruning.push(newItemset);
+        }
+    }
+
+    return newItemsetsAfterPruning;
+}
+
+function aprioriGen(Lk_1) {
+    const newItemsetsBeforePruning = aprioriJoin(Lk_1);
+    const newItemsetsAfterPruning = aprioriPrune(newItemsetsBeforePruning, Lk_1);
     return [newItemsetsBeforePruning, newItemsetsAfterPruning];
 }
+
 
 // Helper function to get all k-item subsets of an itemset
 function getSubsets(itemset, k) {

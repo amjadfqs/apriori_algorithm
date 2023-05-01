@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   return (
-    <div className="p-8 bg-white text-black">
+    <div className="p-8 text-black h-screen">
       <div className="flex">
         <div className="w-9/12">
           <TransactionForm setResult={setResult} />
@@ -98,12 +98,6 @@ export default function Home() {
           Run Apriori
         </button>
       </div>
-      <h2 className="mb-2 text-xl font-semibold">Results</h2>
-      <ul className="mb-4 list-disc list-inside">
-        {results.map((result, index) => (
-          <li key={index}>{result.join(' - ')}</li>
-        ))}
-      </ul>
       <h2 className="mb-2 text-xl font-semibold">Steps</h2>
       <div className="flex gap-4">
         {['allCounts', 'results', 'beforePruningCk', 'afterPruningCk'].map((dataKey, dataIndex) => (
@@ -135,7 +129,6 @@ export default function Home() {
                             <tr key={index}>
                               {dataKey === 'allCounts' && <td>{key.toString()}</td>}
                               {dataKey != 'allCounts' ? <td>{index + 1} - {value}</td> : <td> {value}</td>}
-                              {/* <td>{value}</td> */}
                             </tr>
                           ))}
                         </tbody>
@@ -148,6 +141,19 @@ export default function Home() {
           </div>
         ))}
       </div>
+
+      <div className="divider"></div>
+
+      <h2 className="mb-2 text-xl font-semibold">Results</h2>
+      <ul className="mb-4 list-disc list-inside">
+        {results.map((result, index) => (
+
+          <li key={index}>L{index + 1} : {result.join(' - ')}</li>
+        ))}
+      </ul>
+
+      <div className="divider"></div>
+
       {allRules && (
         <>
           <h2 className="my-5 text-xl font-semibold">Rules : </h2>
