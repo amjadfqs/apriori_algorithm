@@ -48,7 +48,7 @@ export default function Home() {
   };
 
   return (
-    <div className="p-8 text-black h-screen">
+    <div className="p-8 text-black">
       <div className="flex">
         <div className="w-9/12">
           <TransactionForm setResult={setResult} />
@@ -102,8 +102,8 @@ export default function Home() {
           <div key={dataIndex} className="flex flex-col w-3/12 gap-10">
             {[allCounts, results, beforePruningCk, afterPruningCk][dataIndex]?.map((levelCounts, levelIndex) => {
               // Check if the levelCounts object is empty
-              // const isLevelCountsEmpty = Object.keys(levelCounts).length === 0;
-              const isLevelCountsEmpty = dataKey !== 'afterPruningCk' && Object.keys(levelCounts).length === 0;
+              const isLevelCountsEmpty = Object.keys(levelCounts).length === 0;
+              // const isLevelCountsEmpty = dataKey !== 'afterPruningCk' && Object.keys(levelCounts).length === 0;
 
               return (
                 !isLevelCountsEmpty && (
@@ -181,6 +181,16 @@ export default function Home() {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-center mt-12 items-baseline">
+            <span className="text-lg font-extrabold">Developed By :</span>
+            <div className="flex justify-between">
+              <a href="https://github.com/Alia-mohammed" className="mx-4">Alia Alnahmi</a>
+              &#9670;
+              <a href="https://github.com/amjadfqs" className="mx-4">Amjad Alaghbari</a>
+              &#9670;
+              <a href="https://github.com/AdhamALmeklhafi" className="mx-4">Adham Almeklhafi </a>
+            </div>
+          </div>
         </>
       )
       }
