@@ -15,9 +15,6 @@ export default function Home() {
   const [beforePruningCk, setBeforePruningCk] = useState(null);
   const [afterPruningCk, setAfterPruningCk] = useState(null);
   const [allRules, setAllRules] = useState(null);
-  const [filteredRules, setFilteredRules] = useState(null);
-
-
 
   const handleMinSupChange = (e) => setMinSup(e.target.value);
 
@@ -35,9 +32,7 @@ export default function Home() {
     setAfterPruningCk(afterPruningCk);
     setResults(aprioriResults);
     setAllRules(ARules);
-    console.log('allRules', ARules);
     setFilteredRules(FRules);
-    console.log('filteredRules', FRules);
     // Display steps
     let candidates = findFrequentOneItemsets(parsedDataset, minSupInt);
     let stepResults = [];
