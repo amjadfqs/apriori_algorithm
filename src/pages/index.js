@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   return (
-    <div className="p-8 bg-white">
+    <div className="p-8 bg-white text-black">
       <div className="flex">
         <div className="w-9/12">
           <TransactionForm setResult={setResult} />
@@ -146,33 +146,38 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <h2 className="my-5 text-xl font-semibold">Rules : </h2>
-      <table className="table w-full table-zebra">
-        <thead>
-          <tr>
-            <th>Antecedent</th>
-            <th>Consequent</th>
-            <th>Confidence Value</th>
-            <th>Valid</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allRules?.map((item, index) => (
-            <tr key={index}>
-              <td>{item.antecedent.join(', ')}</td>
-              <td>{item.consequent.join(', ')}</td>
-              <td>{(item.confidence * 100).toFixed(1)} %</td>
-              <td>
-                {item.confidence > (minConf / 100) ? (
-                  <span className="text-green-500 text-3xl">✓</span>
-                ) : (
-                  <span className="text-red-500 text-3xl">×</span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {allRules && (
+        <>
+          <h2 className="my-5 text-xl font-semibold">Rules : </h2>
+          <table className="table w-full table-zebra">
+            <thead>
+              <tr>
+                <th>Antecedent</th>
+                <th>Consequent</th>
+                <th>Confidence Value</th>
+                <th>Valid</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allRules?.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.antecedent.join(', ')}</td>
+                  <td>{item.consequent.join(', ')}</td>
+                  <td>{(item.confidence * 100).toFixed(1)} %</td>
+                  <td>
+                    {item.confidence > (minConf / 100) ? (
+                      <span className="text-green-500 text-3xl">✓</span>
+                    ) : (
+                      <span className="text-red-500 text-3xl">×</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )
+      }
     </div>
   );
 }

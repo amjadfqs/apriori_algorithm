@@ -7,7 +7,7 @@
     "distDir": "../out"
   },
   "package": {
-    "productName": "apriori-exe",
+    "productName": "apriori",
     "version": "0.1.0"
   },
   "tauri": {
@@ -16,7 +16,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Education",
       "copyright": "",
       "deb": {
         "depends": []
@@ -29,8 +29,8 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.apriori.dev",
-      "longDescription": "",
+      "identifier": "com.example.dev",
+      "longDescription": "Apriori Algorithm. A step by step guide to understand the algorithm.",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -39,7 +39,7 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "",
+      "shortDescription": "Apriori Algorithm",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -55,8 +55,9 @@
     },
     "windows": [
       {
-        "fullscreen": false,
+        "center": true,
         "height": 600,
+        "decorations": true,
         "resizable": true,
         "title": "Apriori",
         "width": 800
