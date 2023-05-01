@@ -185,9 +185,9 @@ export default function Home() {
             <span className="text-lg font-extrabold">Developed By :</span>
             <div className="flex justify-between">
               <a href="https://github.com/Alia-mohammed" className="mx-4">Alia Alnahmi</a>
-              &#9670;
+              &#9673;
               <a href="https://github.com/amjadfqs" className="mx-4">Amjad Alaghbari</a>
-              &#9670;
+              &#9673;
               <a href="https://github.com/AdhamALmeklhafi" className="mx-4">Adham Almeklhafi </a>
             </div>
           </div>
