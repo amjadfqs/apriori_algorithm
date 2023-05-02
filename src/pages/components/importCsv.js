@@ -9,7 +9,10 @@ function ImportCvs({ setResult }) {
       skipEmptyLines: true, // remove the empty row
       trim: true,
       complete: (results) => {
-        setResult(results.data);
+        const cleanedData = results.data.map(row => {
+          return row.filter(item => item.trim() !== '');
+        });
+        setResult(cleanedData);
       },
     });
   }
