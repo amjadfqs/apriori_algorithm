@@ -158,7 +158,7 @@ export default function Home() {
 
       {allRules && (
         <>
-          <h2 className="my-5 text-xl font-semibold">Rules : </h2>
+          <h2 className="mb-4 text-3xl font-semibold">&#9679; Rules : </h2>
           <table className="table w-full table-zebra">
             <thead>
               <tr>
