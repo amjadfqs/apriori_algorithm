@@ -56,7 +56,7 @@ export default function Home() {
         <div className="w-2/5 h-80">
           <h2 className="mb-4 text-xl font-bold">Transaction :</h2>
           {result && (
-            <div className="mt-8 h-full overflow-scroll">
+            <div className="mt-8 h-full overflow-scroll font-semibold">
               {result.map((arr, index) => (
                 <div key={index}>{JSON.stringify(arr, null, 4)}</div>
               ))}
@@ -96,65 +96,80 @@ export default function Home() {
           Run Apriori
         </button>
       </div>
-      <h2 className="mb-4 text-3xl font-semibold">&#9679; Steps : </h2>
-      <div className="flex gap-4">
-        {['allCounts', 'results', 'beforePruningCk', 'afterPruningCk'].map((dataKey, dataIndex) => (
-          <div key={dataIndex} className="flex flex-col w-3/12 gap-10">
-            {[allCounts, results, beforePruningCk, afterPruningCk][dataIndex]?.map((levelCounts, levelIndex) => {
-              // Check if the levelCounts object is empty
-              const isLevelCountsEmpty = Object.keys(levelCounts).length === 0;
-              // const isLevelCountsEmpty = dataKey !== 'afterPruningCk' && Object.keys(levelCounts).length === 0;
 
-              return (
-                !isLevelCountsEmpty && (
-                  <div key={levelIndex} className="flex flex-col">
-                    <h4 className="mb-1 font-semibold">
-                      {dataKey === 'allCounts' && `Counts - Level ${levelIndex + 1}`}
-                      {dataKey === 'beforePruningCk' && `After Joining - Level ${levelIndex + 1}`}
-                      {dataKey === 'afterPruningCk' && `After Pruning - Level ${levelIndex + 1}`}
-                      {dataKey === 'results' && `After Min Support - Level ${levelIndex + 1}`}
-                    </h4>
-                    <div className="overflow-y-scroll min-h-table h-80">
-                      <table className="table w-full table-compact flex-1 ">
-                        <thead>
-                          <tr>
-                            {dataKey === 'allCounts' && <th>Itemset</th>}
-                            {dataKey === 'allCounts' ? <th>Count</th> : <th>Itemset</th>}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {Object.entries(levelCounts).map(([key, value], index) => (
-                            <tr key={index} className="font-bold">
-                              {dataKey === 'allCounts' && <td>{key.toString()}</td>}
-                              {dataKey != 'allCounts' ? <td>{index + 1} - {value}</td> : <td> {value}</td>}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )
-              );
-            })}
-          </div>
-        ))}
-      </div>
+      {/*  display  */}
 
-      <div className="divider"></div>
+      {
+        allCounts && (
+          <>
+            <h2 className="mb-4 text-3xl font-semibold">&#9679; Steps : </h2>
+            <div className="flex gap-4">
+              {['allCounts', 'results', 'beforePruningCk', 'afterPruningCk'].map((dataKey, dataIndex) => (
+                <div key={dataIndex} className="flex flex-col w-3/12 gap-10">
+                  {[allCounts, results, beforePruningCk, afterPruningCk][dataIndex]?.map((levelCounts, levelIndex) => {
+                    // Check if the levelCounts object is empty
+                    const isLevelCountsEmpty = Object.keys(levelCounts).length === 0;
+                    // const isLevelCountsEmpty = dataKey !== 'afterPruningCk' && Object.keys(levelCounts).length === 0;
 
-      <h2 className="mb-4 text-3xl font-semibold">&#9679; Results</h2>
-      <ul className="mb-4 list-disc list-inside font-bold">
-        {results.map((result, index) => (
-          <li key={index}>
-            L{index + 1} : {result.join(' - ')}
-            {index + 1 < results.length && results[index + 1].length === 0 && (
-              <span className="ml-2 text-green-500">✓ This is the Frequent Itemset</span>
-            )}
-          </li>
-        ))}
-      </ul>
+                    return (
+                      !isLevelCountsEmpty && (
+                        <div key={levelIndex} className="flex flex-col">
+                          <h4 className="mb-1 font-semibold">
+                            {dataKey === 'allCounts' && `Counts - Level ${levelIndex + 1}`}
+                            {dataKey === 'beforePruningCk' && `After Joining - Level ${levelIndex + 1}`}
+                            {dataKey === 'afterPruningCk' && `After Pruning - Level ${levelIndex + 1}`}
+                            {dataKey === 'results' && `After Min Support - Level ${levelIndex + 1}`}
+                          </h4>
+                          <div className="overflow-y-scroll min-h-table h-80">
+                            <table className="table w-full table-compact flex-1 ">
+                              <thead>
+                                <tr>
+                                  {dataKey === 'allCounts' && <th>Itemset</th>}
+                                  {dataKey === 'allCounts' ? <th>Count</th> : <th>Itemset</th>}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {Object.entries(levelCounts).map(([key, value], index) => (
+                                  <tr key={index} className="font-bold">
+                                    {dataKey === 'allCounts' && <td>{key.toString()}</td>}
+                                    {dataKey != 'allCounts' ? <td>{index + 1} - {value}</td> : <td> {value}</td>}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
 
-      <div className="divider"></div>
+            <div className="divider"></div>
+          </>
+        )
+      }
+
+      {
+        allCounts && (
+          <>
+            <h2 className="mb-4 text-3xl font-semibold">&#9679; Results</h2>
+            <ul className="mb-4 list-disc list-inside font-bold">
+              {results.map((result, index) => (
+                <li key={index}>
+                  L{index + 1} : {result.join(' - ')}
+                  {index + 1 < results.length && results[index + 1].length === 0 && (
+                    <span className="ml-2 text-green-500">✓ This is the Frequent Itemset</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            <div className="divider"></div>
+          </>
+        )
+      }
 
       {allRules && (
         <>
