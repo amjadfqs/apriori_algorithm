@@ -96,7 +96,7 @@ export default function Home() {
           Run Apriori
         </button>
       </div>
-      <h2 className="mb-2 text-xl font-semibold">Steps</h2>
+      <h2 className="mb-4 text-3xl font-semibold">&#9679; Steps : </h2>
       <div className="flex gap-4">
         {['allCounts', 'results', 'beforePruningCk', 'afterPruningCk'].map((dataKey, dataIndex) => (
           <div key={dataIndex} className="flex flex-col w-3/12 gap-10">
@@ -124,7 +124,7 @@ export default function Home() {
                         </thead>
                         <tbody>
                           {Object.entries(levelCounts).map(([key, value], index) => (
-                            <tr key={index}>
+                            <tr key={index} className="font-bold">
                               {dataKey === 'allCounts' && <td>{key.toString()}</td>}
                               {dataKey != 'allCounts' ? <td>{index + 1} - {value}</td> : <td> {value}</td>}
                             </tr>
@@ -142,11 +142,15 @@ export default function Home() {
 
       <div className="divider"></div>
 
-      <h2 className="mb-2 text-xl font-semibold">Results</h2>
-      <ul className="mb-4 list-disc list-inside">
+      <h2 className="mb-4 text-3xl font-semibold">&#9679; Results</h2>
+      <ul className="mb-4 list-disc list-inside font-bold">
         {results.map((result, index) => (
-
-          <li key={index}>L{index + 1} : {result.join(' - ')}</li>
+          <li key={index}>
+            L{index + 1} : {result.join(' - ')}
+            {index + 1 < results.length && results[index + 1].length === 0 && (
+              <span className="ml-2 text-green-500">✓ This is the Frequent Itemset</span>
+            )}
+          </li>
         ))}
       </ul>
 
@@ -167,9 +171,9 @@ export default function Home() {
             <tbody>
               {allRules?.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.antecedent.join(', ')}</td>
-                  <td>{item.consequent.join(', ')}</td>
-                  <td>{(item.confidence * 100).toFixed(1)} %</td>
+                  <td className="font-bold">{item.antecedent.join(', ')}</td>
+                  <td className="font-bold">{item.consequent.join(', ')}</td>
+                  <td className="font-bold">{(item.confidence * 100).toFixed(1)} %</td>
                   <td>
                     {item.confidence > (minConf / 100) ? (
                       <span className="text-green-500 text-3xl">✓</span>

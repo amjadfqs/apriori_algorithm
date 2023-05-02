@@ -5,11 +5,13 @@
  * @returns {Array} - An array containing frequent itemsets and their counts.
  */
 
+
+// main function
 export function apriori(D, minSup, minConf) {
     let L = [];
     let result = findFrequentOneItemsets(D, minSup);
     let L1 = result.firstItemSet;
-    let allCounts = [result.counts]; // Include the counts from the first itemset
+    let allCounts = [result.counts]; // Including the counts from the first itemset
     L.push(L1);
     let k = 2;
     let allBeforePruningCk = [];
@@ -49,6 +51,7 @@ export function findFrequentOneItemsets(D, minSup) {
     return { firstItemSet, counts };
 }
 
+// return new itemsets after join 
 function aprioriJoin(Lk_1) {
     const newItemsets = [];
     const len = Lk_1.length;
@@ -70,6 +73,7 @@ function aprioriJoin(Lk_1) {
     return newItemsets;
 }
 
+// return new itemsets after prune
 function aprioriPrune(newItemsetsBeforePruning, Lk_1) {
     const newItemsetsAfterPruning = [];
 
@@ -88,14 +92,14 @@ function aprioriPrune(newItemsetsBeforePruning, Lk_1) {
     return newItemsetsAfterPruning;
 }
 
+// return new itemsets after join and prune
 function aprioriGen(Lk_1) {
     const newItemsetsBeforePruning = aprioriJoin(Lk_1);
     const newItemsetsAfterPruning = aprioriPrune(newItemsetsBeforePruning, Lk_1);
     return [newItemsetsBeforePruning, newItemsetsAfterPruning];
 }
 
-
-// Helper function to get all k-item subsets of an itemset
+// return all subsets of itemset
 function getSubsets(itemset, k) {
     if (k === 0) {
         return [[]];
@@ -113,7 +117,7 @@ function getSubsets(itemset, k) {
     return [...subsetsWithoutHead, ...subsetsWithHead];
 }
 
-
+// return counts of itemsets
 export function countItemsets(Ck, D) {
     let counts = {};
     for (let c of Ck) {
@@ -133,6 +137,7 @@ export function countItemsets(Ck, D) {
 }
 
 
+// return itemsets after filter by minSup
 export function filterByMinSup(counts, minSup) {
     return Object.keys(counts)
         .filter(itemset => counts[itemset] >= minSup)
@@ -151,8 +156,8 @@ export function filterByMinSup(counts, minSup) {
 }
 
 
-//
 
+// return all rules and filtered rules
 export function generateAssociationRules(L, allCounts, minConf) {
     const allRules = [];
     const filteredRules = [];
