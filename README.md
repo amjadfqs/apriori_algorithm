@@ -4,7 +4,7 @@
 A Step by step demo implementation of Apriori Algorithm.
 
 
-This project was for Data Mining Subject - C.S Department
+This project was for Data Mining Project - C.S Department
 
 
 ## Documentation
